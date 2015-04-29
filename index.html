@@ -1,0 +1,560 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Dialog3.0解说文档</title>
+<script src="src/dialog.3.1.js"></script>
+<link rel="stylesheet" href="style/animate.css" />
+<link rel="stylesheet" href="style/motion.css" />
+<link rel="stylesheet" href="style/mydialog.css"/>
+
+<style>
+/*  Reset  */
+html,body,div,span,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,cite,code,del,em,img,q,small,strong,sub,sup,b,i,dl,dt,dd,ol,ul,li,fieldset,form,label,legend { margin:0; padding:0; border:0; font-size:100%;}
+body { background:#fff; color:#000; font:12px 'Microsoft YaHei'; text-align:center;}
+ul { list-style:none;}
+cite,em,strong,th,h1,h2,h3,h4,h5,h6 { font-style:normal; font-weight:normal;}
+input,textarea,select,button,td { font-size:100%;}
+a { color:#000; text-decoration:none;}
+a:hover { color:#f00; text-decoration:none;}
+
+
+
+/**/
+body { padding-top:60px; text-align:left; background:#f2f2f2;}
+.header { width:100%; height:60px; background:#222; position:fixed; top:0; left:0; z-index:9999;}
+.header .logo { color:#ddd;}
+.header .logo:hover { color:#ff0;}
+.header .logo strong { float:left; font:1.4em/60px "Microsoft YaHei"; padding-left:10%;}
+
+.nav { float:left; font:15px/60px "Microsoft YaHei"; color:#ccc; padding-left:30px;}
+.nav li { float:left;}
+.nav a { display:block; padding:0 24px; color:#ccc;}
+.nav a:hover { background:#323232; color:#fff}
+
+.banner { background:#042b67; padding:40px 20%; color:#fff;
+background: -moz-radial-gradient(bottom left, ellipse, #1960a2, #042a68, #144591);
+background: -webkit-radial-gradient(bottom left, ellipse, #1960a2, #042a68, #144591);
+background: radial-gradient(bottom left, ellipse, #1960a2, #042a68, #144591);}
+.banner h1 { font-size:38px; line-height:220%;}
+.banner h2 { font-size:18px; line-height:160%; padding-bottom:20px;}
+
+.item { border:1px solid #ccc; background:#fff; border-radius:15px; -webkit-border-radius:15px; -moz-border-radius:15px; -o-border-radius:15px; width:70%; margin:40px auto 0; padding:20px; font-size:16px; line-height:180%;}
+.item h3 { background:#ededed; margin:-20px -20px 20px -20px; padding:10px 20px; border-radius:15px 15px 0 0; -webkit-border-radius:15px 15px 0 0; -moz-border-radius:15px 15px 0 0; -o-border-radius:15px 15px 0 0; font-weight:bold;}
+.item ol { margin:0 8%;}
+.item ul { margin:0 6%;}
+
+.item a { color:#00f;}
+.item a:hover { color:#c00; text-decoration:underline;}
+
+
+.red { color:#c00;}
+.green { color:#093;}
+
+
+
+
+
+input { line-height:16px; padding:3px 8px; margin:5px 0;}
+
+
+#pageidformouse { display:none; width:200px; height:150px; border:1px solid #ccc; background:#f2f2f2; text-align:center; padding:15px 0;}
+
+</style>
+</head>
+
+<body>
+<div class="header">
+  <a class="logo"> <strong><em>Dialog 3.1</em></strong> 
+  </a>
+  <ul class="nav" id="js-nav">
+    <li>
+      <a href="#texing">特性</a>
+    </li>
+    <li>
+      <a href="#api">API</a>
+    </li>
+    <li>
+      <a href="#demo">演示</a>
+    </li>
+    <li>
+      <a href="#shiyong">使用方法</a>
+    </li>
+    <li>
+      <a href="#down">下载</a>
+    </li>
+
+  </ul>
+</div>
+
+<div class="banner">
+  <h1>Dialog 3.1</h1>
+  <h2>弹出浮层专用组件，轻量、可配置、丰富的展现动画、风格变化万千</h2>
+</div>
+
+<a name="texing"></a>
+
+<div class="item">
+  组件版本：<strong>Dialog 3.1.0</strong><br />
+  3.1.0更换动画组件，使动画更加流畅<br />
+  增加关闭窗口动画【兼容IE10及以上、现代浏览器】<br />
+  修正Dialog.close()参数为空时关闭所有Dialog
+</div>
+
+<div class="item">
+  <h3>组件特性：</h3>
+  <ol>
+    <li>不依赖任何JS类库，组件独立存在、独立运行，支持AMD<br /><br /></li>
+
+    <li>浮层标题自定义</li>
+    <li>浮层内容自定义且支持HTML 【<a href="#guagou">html中的挂钩</a>】</li>
+    <li>浮层根据内容大小自动伸缩并定位</li>
+    <li>浮层风格自定义，且一个页面可以存在多个风格</li>
+    <li>浮层可指定页面内已存在的ID进行显示</li>
+    <li>浮层页脚按钮支持是否显示配置，确定和取消按钮分别支持开关和自定义文字配置<br /><br /></li>
+
+    <li>浮层提供了丰富的展现动画</li>
+    <li>浮层头部提供拖拽移动</li>
+    <li>浮层提供根据鼠标或者页面元素定位功能</li>
+    <li>浮层提供强行定义宽度功能，可设置百分比，用于响应式页面的展示<br /><br /></li>
+
+    <li>指定相同ID的浮层只展现一个，不会出现重复ID</li>
+    <li>已弹出浮层内容变更时提供重置大小方法</li>
+    <li>浮层提供锁屏接口，可配置锁屏颜色及透明度</li>
+    <li>锁屏背景可点击关闭浮层</li>
+    <li>浮层支持定时自动关闭</li>
+    <li>浮层同时提供内部关闭方法以及外部关闭接口</li>
+    <li>浮层支持ESC按键关闭<br /><br /></li>
+    <li>浮层提供加载完成、关闭、确定、取消回调方法</li>
+  </ol>
+</div>
+
+<div class="item">
+  <h3>浏览器兼容：</h3>
+  <ul>
+    <li class="red">IE6不支持</li>
+    <li>IE7+</li>
+    <li>Chrome</li>
+    <li>Firefox</li>
+    <li>Opera</li>
+    <li>Safari</li>
+
+    <a name="shiyong"></a>
+
+    <li>...</li>
+    <li>开关动画仅在CSS3下支持，古代浏览器放弃支持</li>
+  </ul>
+</div>
+
+<div class="item">
+  <h3>使用方法：</h3>
+  <ul>
+    <li>页面内引入如下代码：（注意调整文件引用路径）</li>
+    <li class="green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;script src="src/dialog.3.0.js"&gt;&lt;/script&gt;</li>
+    <li class="green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;link rel="stylesheet" href="style/mydialog.css"/&gt;</li>
+    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;link rel="stylesheet" 
+      href="style/animate.css"/&gt;</li>
+    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;link rel="stylesheet" href="style/motion.css"/&gt;<br /><br /></li>
+    <li>您可以调用Dialog方法啦。</li>
+    <li>两个CSS文件可以跟您的主CSS合并；</li>
+    <li>animate.css为展现动画，如果不需要动画，可以不引用。</li>
+    <li>motion.css为扩展动画，不需要扩展，可以不引用。<br /><br /></li>
+
+    <a name="diaoyong"></a>
+
+    <li>JS文件可以通过requireJS进行引用，支持AMD</li>
+  </ul>
+</div>
+
+<div class="item">
+  <h3>调用效果：<a href="#demo">实例展示</a></h3>
+  <ul>
+    <li>简洁版：<span class="green">Dialog("要提示的内容");</span></li>
+    <li>指定显示网页内的ID：<span class="green">Dialog({"id": "dialodid"});</span></li>
+    <li>自定义显示内容：<span class="green">Dialog({"msg": "&lt;div&gt;要提示的内容&lt;/div&gt;"});</span><br /><br /></li>
+    <li>复杂参数展示：<span class="green">Dialog({ "id": "test", "msg": "&lt;div&gt;要提示的内容&lt;/div&gt;", "lock": true, onClose: function() {....} });</span> 这里可以写很多很多参数，<a href="#api">详细参数列表</a><br /><br /></li>
+
+    <a name="guagou"></a>
+
+    <li>注意：Dialog({}) 与 new Dialog({})等效，组件都会new一个对象出来</li>
+  </ul>
+</div>
+
+<div class="item">
+  <h3>自定义HTML中的挂钩：</h3>
+  <ul>
+    <li>data-dialog-close【关闭按钮挂钩】</li>
+    <li>data-dialog-submit【提交按钮挂钩】</li>
+    <li>data-dialog-cancel【取消按钮挂钩】</li>
+    <li>在任何标签上加上这些属性都可以与其功能产生对应，例如：&lt;a href="#" class="D_close" <span class="green">data-dialog-close</span>&gt;关闭&lt;/a&gt;</li>
+
+    <a name="api"></a>
+
+    <li>组件将自动为这个a标签添加点击关闭动作</li>
+  </ul>
+</div>
+
+<div class="item">
+  <h3>API：<a href="#diaoyong">调用代码</a></h3>
+  <pre style="font:16px/200% 'Microsoft YaHei';">
+/**
+     * 浮层启动参数配置项，例如：Dialog({....})，其中{....}就是对象o
+     * @param {[Object]} o     配置参数对象
+     * @config {[String]} id   浮层ID 必须是唯一值
+     * @config {[String]} title   默认 友情提示，浮层名称
+     * @config {[String]} msg   自定义显示的内容，支持HTML
+     * @config {[Boolean]} lock   默认 false 布尔值，是否锁屏
+     * @config {[String]} lockColor   默认 #000，锁屏颜色  lock:true下有效
+     * @config {[Number]} lockOpacity   默认 50，锁屏透明度  范围0-100
+     * @config {[Boolean]} lockClose   默认 true，锁屏的遮罩层是否点击关闭
+     * @config {[String||HTMLElement]} position   默认 无参考 可传递mouse或HTMLElement，mouse时以鼠标为参照物，HTMLElement时以该元素为参照物
+     * @config {[String||Number]} top   默认 无 浮层距窗口顶部距离，position有值时以position为参照物 【参照物时仅支持PX单位，设置其他单位无效，%不可使用，数字时默认单位px】
+     * @config {[String||Number]} right   默认 无 浮层距窗口右侧距离 position下无效
+     * @config {[String||Number]} bottom   默认 无 浮层距窗口底部距离 position下无效
+     * @config {[String||Number]} left   默认 无 浮层距窗口左侧距离，position有值时以position为参照物 【参照物时仅支持PX单位，设置其他单位无效，%不可使用，数字时默认单位px】
+     * @config {[String||Number]} width   默认 无 强行设定浮层宽度   百分比设定，用于响应式设计，具体宽度设置后出现滚动条不能完美展现
+     * @config {[String||Number]} height   默认 无 强行设定浮层高度   简易实现，暂不推荐使用
+     * @config {[String]} animation   默认 无 浮层打开动画【无关闭动画】该动画使用CSS3动画类库实现，调用前必须引入CSS3动画样式文件
+     * @ animation param 参考案例
+     * @config {[Boolean]} move   默认 true 窗口是否可以拖动【有定位属性拖动失效】
+     * @config {[String]} style   默认 mydialog  皮肤自定义【请引入对应的CSS文件】
+     * @config {[Number]} time   默认 无  多少毫秒后自动关闭，无此参数不关闭
+     * @config {[Boolean]} closeButton   默认 true  关闭按钮“×”是否展示
+     * @config {[Boolean]} showButtons   默认 false  页脚控制台按钮开关【简易模式下系统将该参数设置为true】
+     * @config {[String||Boolean]} submitButton   默认“确定”， 为false时隐藏  showButtons:true下有效
+     * @config {[String||Boolean]} cancelButton   默认“取消”， 为false时隐藏  showButtons:true下有效
+     * @config {[Function]} onReady   加载完成回调 返回false时阻断执行【接受一个参数为当前实例】 例如：function(that) {}
+     * @config {[Function]} onClose   关闭按钮回调 返回false时阻断执行【接受一个参数为当前实例】 例如：function(that) {}
+     * @config {[Function]} onSubmit   确定按钮回调 返回false时阻断执行【接受一个参数为当前实例】 例如：function(that) {}
+     * @config {[Function]} onCancel   取消按钮回调 返回false时阻断执行【接受一个参数为当前实例】 例如：function(that) {}
+     *
+     * @remark 
+     *        内部对外方法：
+     *        var mydialog = new Dialog({});
+     *        mydialog.reload();// 重置定位功能，重置大小
+     *        mydialog.close();// 关闭浮层【关闭回调方法返回非false时才关闭】
+     *        mydialog.submit();// 提交关闭浮层【提交回调方法返回非false时才关闭】
+     *        mydialog.cancel();// 取消关闭浮层【取消回调方法返回非false时才关闭】
+     *
+     *        全局关闭接口
+     *        Dialog.close('myclose');// 参数为浮层ID，仅执行关闭，不处理任何回调方法，没有参数时关闭所有
+     *
+     *        Esc键可关闭最高层对话框// 仅执行关闭，不处理任何回调方法
+     */
+  </pre>
+</div>
+
+<a name="demo"></a>
+<br /><br />
+<div class="item">
+  <h3>实例展示：</h3>
+  <div id="existing" style="display:none;">页面内存在的ID <a href="#" data-dialog-close>关闭</a></div>
+
+
+  <a href="demos/demo.html" target="_blank">单页面完整案例</a>
+
+  <br />
+  <input type="button" value="Dialog-ID" onclick="test();" />
+
+  <br />
+  <input type="button" value="Dialog-alert" onclick="new Dialog('测试');" />
+
+  <br />
+  <input type="button" value="页面内ID【不进行定位】" onclick="new Dialog({'id':'existing', 'top': 100});" />
+
+  <br />
+  <input type="button" value="Dialog-无ID" onclick="new Dialog({'msg':'没有ID，只有MSG参数'});" />
+
+
+  <br />
+  <input type="button" value="Dialog-width" onclick="new Dialog({'width':'40%', 'msg':'<div style=width:100%>限制宽度，百分比设定，用于响应式设计，具体宽度设置后出现滚动条不能完美展现</div>', 'showButtons': true});" />
+
+  <br />
+  <input type="button" value="Dialog-height" onclick="new Dialog({'height':'40%', 'msg':'<div style=height:300px>限制宽度，百分比设定，用于响应式设计，具体宽度设置后出现滚动条不能完美展现</div>', 'showButtons': true});" />
+
+  <br />
+  <input type="button" value="Dialog-time" onclick="new Dialog({'time': 2000, 'msg':'限时关闭，2秒后自动关闭'});" />
+
+  <br />
+  <input type="button" value="Dialog-mouse" onclick="new Dialog({'id': 'formouse', 'position': 'mouse', 'msg':'根据鼠标定位', 'top': 10, 'left': '20px'});" />
+
+  <br />
+  <input type="button" value="页面内ID-mouse" onclick="new Dialog({'id': 'pageidformouse', 'position': 'mouse', 'top': 10, 'left': 10, 'lock':true});" />
+
+  <br />
+  <input type="button" value="Dialog-HTMLElement" onclick="new Dialog({'id': 'formouse', 'position': this, 'msg':'根据元素定位', 'top': 10, 'left': '20px'});" />
+
+  <br />
+  <input type="button" value="页面内ID-HTMLElement" onclick="new Dialog({'id': 'pageidformouse', 'position': this, 'top': 10, 'left': 10, 'animation': 'BounceIn'});" />
+
+
+
+
+  <br /><br /><br />
+  动画案例：
+  <br />
+  <input type="button" value="Dialog-弹跳" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated bounce'});" />
+  <br />
+  <input type="button" value="Dialog-闪烁" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated flash'});" />
+  <br />
+  <input type="button" value="Dialog-脉冲" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated pulse'});" />
+  <br />
+  <input type="button" value="Dialog-橡皮筋" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated rubberBand'});" />
+  <br />
+  <input type="button" value="Dialog-抖动" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated shake'});" />
+  <br />
+  <input type="button" value="Dialog-摇晃" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated swing'});" />
+  <br />
+  <input type="button" value="Dialog-跳、抖" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated tada'});" />
+  <br />
+  <input type="button" value="Dialog-晃动" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated wobble'});" />
+  <br />
+  <input type="button" value="Dialog-弹入" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated bounceIn'});" />
+  <br />
+  <input type="button" value="Dialog-从上弹入" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated bounceInDown'});" />
+  <br />
+  <input type="button" value="Dialog-从左弹入" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated bounceInLeft'});" />
+  <br />
+  <input type="button" value="Dialog-从右弹入" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated bounceInRight'});" />
+  <br />
+  <input type="button" value="Dialog-从下弹入" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated bounceInUp'});" />
+
+
+  <br />
+  <input type="button" value="Dialog-渐入" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated fadeIn'});" />
+  <br />
+  <input type="button" value="Dialog-上渐入" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated fadeInDown'});" />
+  <br />
+  <input type="button" value="Dialog-上渐入-较大距离" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated fadeInDownBig'});" />
+  <br />
+  <input type="button" value="Dialog-左渐入" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated fadeInLeft'});" />
+  <br />
+  <input type="button" value="Dialog-左渐入-较大距离" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated fadeInLeftBig'});" />
+  <br />
+  <input type="button" value="Dialog-右渐入" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated fadeInRight'});" />
+  <br />
+  <input type="button" value="Dialog-右渐入-较大距离" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated fadeInRightBig'});" />
+  <br />
+  <input type="button" value="Dialog-下渐入" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated fadeInUp'});" />
+  <br />
+  <input type="button" value="Dialog-下渐入-较大距离" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated fadeInUpBig'});" />
+  <br />
+  <input type="button" value="Dialog-反转" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated flip'});" />
+  <br />
+  <input type="button" value="Dialog-X-反转" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated flipInX'});" />
+  <br />
+  <input type="button" value="Dialog-Y-反转" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated flipInY'});" />
+  <br />
+  <input type="button" value="Dialog-扭动滑入" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated lightSpeedIn'});" />
+  <br />
+  <input type="button" value="Dialog-旋转显示" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated rotateIn'});" />
+  <br />
+  <input type="button" value="Dialog-左上旋转显示" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated rotateInDownLeft'});" />
+  <br />
+  <input type="button" value="Dialog-右上旋转显示" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated rotateInDownRight'});" />
+  <br />
+  <input type="button" value="Dialog-左下旋转显示" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated rotateInUpLeft'});" />
+  <br />
+  <input type="button" value="Dialog-右下旋转显示" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated rotateInUpRight'});" />
+  <br />
+  <input type="button" value="Dialog-左侧滚进来" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated rollIn'});" />
+  <br />
+  <input type="button" value="Dialog-小到大显示" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated zoomIn'});" />
+  <br />
+  <input type="button" value="Dialog-小到大-上曲线显示" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated zoomInDown'});" />
+  <br />
+  <input type="button" value="Dialog-小到大-下曲线显示" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated zoomInUp'});" />
+  <br />
+  <input type="button" value="Dialog-小到大-左曲线显示" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated zoomInLeft'});" />
+  <br />
+  <input type="button" value="Dialog-小到大-右曲线显示" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated zoomInRight'});" />
+  <br />
+  <input type="button" value="Dialog-小到大-上侧滑入" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated slideInDown'});" />
+  <br />
+  <input type="button" value="Dialog-小到大-下侧滑入" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated slideInUp'});" />
+  <br />
+  <input type="button" value="Dialog-小到大-左侧滑入" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated slideInLeft'});" />
+  <br />
+  <input type="button" value="Dialog-小到大-右侧滑入" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated slideInRight'});" />
+  <br /><br /><br />
+  扩展css  motion.css 支持：<br />
+  <input type="button" value="Dialog-下反显示" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated motionFlipInDown'});" />
+  <br />
+  <input type="button" value="Dialog-上反显示" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated motionFlipInUp'});" />
+  <br />
+  <input type="button" value="Dialog-右反显示" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated motionFlipInRight'});" />
+  <br />
+  <input type="button" value="Dialog-左反显示" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated motionFlipInLeft'});" />
+
+
+
+  <br /><br /><br /><br />
+  消失动画：<br />
+  <input type="button" value="Dialog-弹出" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated bounceOut'});" />
+  <br />
+  <input type="button" value="Dialog-向下弹出" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated bounceOutDown'});" />
+  <br />
+  <input type="button" value="Dialog-向左弹出" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated bounceOutLeft'});" />
+  <br />
+  <input type="button" value="Dialog-向右弹出" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated bounceOutRight'});" />
+  <br />
+  <input type="button" value="Dialog-向上弹出" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated bounceOutUp'});" />
+  <br />
+  <input type="button" value="Dialog-渐出" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated fadeOut'});" />
+  <br />
+  <input type="button" value="Dialog-下渐出" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated fadeOutDown'});" />
+  <br />
+  <input type="button" value="Dialog-下渐出-较大距离" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated fadeOutDownBig'});" />
+  <br />
+  <input type="button" value="Dialog-左渐出" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated fadeOutLeft'});" />
+  <br />
+  <input type="button" value="Dialog-左渐出-较大距离" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated fadeOutLeftBig'});" />
+  <br />
+  <input type="button" value="Dialog-右渐出" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated fadeOutRight'});" />
+  <br />
+  <input type="button" value="Dialog-右渐出-较大距离" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated fadeOutRightBig'});" />
+  <br />
+  <input type="button" value="Dialog-上渐出" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated fadeOutUp'});" />
+  <br />
+  <input type="button" value="Dialog-上渐出-较大距离" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated fadeOutUpBig'});" />
+  <br />
+  <input type="button" value="Dialog-X-反转消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated flipOutX'});" />
+  <br />
+  <input type="button" value="Dialog-Y-反转消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated flipOutY'});" />
+  <br />
+  <input type="button" value="Dialog-扭动滑出" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated lightSpeedOut'});" />
+  <br />
+  <input type="button" value="Dialog-旋转消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated rotateOut'});" />
+  <br />
+  <input type="button" value="Dialog-左下旋转消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated rotateOutDownLeft'});" />
+  <br />
+  <input type="button" value="Dialog-右下旋转消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated rotateOutDownRight'});" />
+  <br />
+  <input type="button" value="Dialog-左上旋转消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated rotateOutUpLeft'});" />
+  <br />
+  <input type="button" value="Dialog-右上旋转消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated rotateOutUpRight'});" />
+  <br />
+  <input type="button" value="Dialog-掉落" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated hinge'});" />
+  <br />
+  <input type="button" value="Dialog-右侧滚出去" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated rollOut'});" />
+  <br />
+  <input type="button" value="Dialog-大到小消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated zoomOut'});" />
+  <br />
+  <input type="button" value="Dialog-大到小-上曲线消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated zoomOutDown'});" />
+  <br />
+  <input type="button" value="Dialog-大到小-下曲线消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated zoomOutUp'});" />
+  <br />
+  <input type="button" value="Dialog-大到小-左曲线消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated zoomOutLeft'});" />
+  <br />
+  <input type="button" value="Dialog-大到小-右曲线消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated zoomOutRight'});" />
+  
+  <br />
+  <input type="button" value="Dialog-大到小-下滑出" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated slideOutDown'});" />
+  <br />
+  <input type="button" value="Dialog-大到小-上滑出" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated slideOutUp'});" />
+  <br />
+  <input type="button" value="Dialog-大到小-左滑出" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated slideOutLeft'});" />
+  <br />
+  <input type="button" value="Dialog-大到小-右滑出" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated slideOutRight'});" />
+  
+  <br /><br /><br />
+  扩展css  motion.css 支持：<br />
+  <input type="button" value="Dialog-上反消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated motionFlipOutDown'});" />
+  <br />
+  <input type="button" value="Dialog-下反消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated motionFlipOutUp'});" />
+  <br />
+  <input type="button" value="Dialog-左反消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated motionFlipOutRight'});" />
+  <br />
+  <input type="button" value="Dialog-右反消失" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'outAnimation': 'animated motionFlipOutLeft'});" />
+</div>
+
+<a name="down"></a>
+<br /><br />
+<div class="item">
+  文件下载：<a href="dialog3.1.zip" target="_blank">本地下载</a> &nbsp;&nbsp;&nbsp; <a href="https://github.com/imf7/Dialog" target="_blank">github下载</a>
+</div>
+
+
+
+
+
+
+<br /><br /><br />
+
+
+<div id="pageidformouse">页面内ID进行定位使用<br /><br /><a href="#" data-dialog-close>关闭</a></div>
+
+
+<script>
+function test() {
+  window.d = new Dialog({
+    "id": "testdialog",
+    "title": "华扬提示您",
+    "msg": '<div style="width:400px; height:200px">这只是个测试内容</div>',
+    "lock": true,
+    // "lockColor": "#f00",
+    // "lockOpacity": 10,
+    // "lockClose": false,
+    
+    // "move": false,
+
+    // "style": "mydialog",
+    
+    // "position": "",
+
+    // "top": "10pt",
+    // "left": "",
+    // "right": "0",
+    // "bottom": 50,
+    
+    // 自己用JS写的几个动画【暂时不用，改用CSS3动画类库】
+    // "animation": "down",
+    // "animation": "size",
+    // "animation": "rotate",
+    
+    // 根据动画类库中可设置的几个方法，参考http://animator.ringotc.net/
+    // "animation": "FadeIn",// 渐入
+    // "animation": "FadeInT",// 从上渐入
+    // "animation": "FadeInL",// 从左渐入
+    // "animation": "FadeInR",// 从右渐入
+    // "animation": "FadeInB",// 从下渐入
+    // "animation": "Bounce",// 弹跳
+    // "animation": "BounceIn",// 弹入
+    // "animation": "BounceInT",// 从上弹入
+    // "animation": "BounceInL",// 从左弹入
+    // "animation": "BounceInR",// 从右弹入
+    // "animation": "BounceInB",// 从下弹入
+    // "animation": "Flip",// 翻转
+    // "animation": "FlipInY",// Y轴翻转
+    // "animation": "Flash",// 闪烁
+    // "animation": "Shake",// 摇晃
+    // "animation": "Wobble",// 摇曳
+    // "animation": "Tada",// 响铃
+    // "animation": "RubberBand",// 橡皮筋
+    "animation": "LightSpeedIn",// 滑入
+
+
+    "showButtons": true,
+    "submitButton": "我觉得很帅",
+    "cancelButton": "拜拜",
+    
+    "onReady": function(that) {
+        console.log(that.config_title);
+    },
+    "onSubmit": function(that) {
+        console.log(that.config_title);
+        return false;
+    },
+    "onCancel": function(that) {
+        console.log(that.config_title);
+    },
+    "onClose": function(that) {
+        console.log("close:" + that.config_title);
+    },
+
+    "closeButton": true
+  });
+};
+</script>
+</body>
+</html>

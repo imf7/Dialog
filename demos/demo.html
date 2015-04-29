@@ -1,0 +1,57 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Demo</title>
+<script src="../src/dialog.3.1.js"></script>
+<link rel="stylesheet" href="../style/animate.css" />
+<link rel="stylesheet" href="../style/motion.css" />
+<link rel="stylesheet" href="../style/mydialog.css" />
+<style>
+/*  Reset  不用理会，请使用您自己的Reset  */
+html,body,div,span,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,cite,code,del,em,img,q,small,strong,sub,sup,b,i,dl,dt,dd,ol,ul,li,fieldset,form,label,legend { margin:0; padding:0; border:0; font-size:100%;}
+body { background:#fff; color:#000; font:12px 'Microsoft YaHei'; text-align:center;}
+ul { list-style:none;}
+cite,em,strong,th,h1,h2,h3,h4,h5,h6 { font-style:normal; font-weight:normal;}
+input,textarea,select,button,td { font-size:100%;}
+a { color:#000; text-decoration:none;}
+a:hover { color:#f00; text-decoration:none;}
+</style>
+</head>
+
+<body>
+<br /><br /><br /><br /><br /><br />
+<input type="button" value="点击弹出浮层" onclick="test();" />
+
+<script>
+function test() {
+  new Dialog({
+    "id": "testdialog",
+    "title": "请问我帅吗",
+    "msg": '<div style="width:300px; height:100px">这只是个测试内容</div>',
+    "lock": true,
+    "animation": "animated bounceIn",// 滑入
+    "outAnimation": "animated bounceOut",// 关闭动画
+
+    "showButtons": true,
+    "submitButton": "我觉得很帅",
+    "cancelButton": "拜拜",
+    
+    "onReady": function(that) {
+        console.log(that.config_title);
+    },
+    "onSubmit": function(that) {
+        alert("脸红了，人家没那么帅啦！");
+    },
+    "onCancel": function(that) {
+        alert("难道我不帅吗？不夸我你就关闭不了。。。");
+        return false;
+    },
+    "onClose": function(that) {
+        // console.log("close:" + that.config_title);
+    }
+  });
+};
+</script>
+</body>
+</html>
