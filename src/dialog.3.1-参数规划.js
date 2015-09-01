@@ -68,7 +68,8 @@ Dialog({
     "onClose": function() {},// 关闭按钮回调 返回false时阻断执行
     "onSubmit": function() {},// 确定按钮回调 返回false时阻断执行
     "onCancel": function() {},// 取消按钮回调 返回false时阻断执行
-    
+    "onBeforeClose": function() {},// Dialog关闭前回调【不分任何关闭方式】 返回false时阻断执行
+    "onComplete": function() {},// Dialog被关闭时都会回调【不分任何关闭方式】 在关闭浮层后才会执行【不接收参数】    
 
 });
 
@@ -77,15 +78,16 @@ var mydialog = new Dialog({});
 mydialog.reload();// 重置定位功能，重置大小
 
 mydialog.close();// 关闭浮层【关闭回调方法返回非false时才关闭】
+mydialog.remove(); // 直接跳过回到函数检测环节关闭浮层，非特殊情况不要使用
 mydialog.submit();// 提交关闭浮层【提交回调方法返回非false时才关闭】
 mydialog.cancel();// 取消关闭浮层【取消回调方法返回非false时才关闭】
 
 
-mydialog.reload();
-
 // 全局关闭接口
-Dialog.close('myclose');// 仅执行关闭，不处理任何回调方法，参数为空时关闭所有Dialog
+Dialog.close('myclose'); // 参数为浮层ID，关闭时检测onClose回调方
+Dialog.close();// 关闭所有已打开的Dialog【会检测onClose回调函数是否返回true】
+Dialog.close(true);// 强行关闭所有已打开的Dialog，跳过回调函数检测
 
-Esc键关闭最高层对话框// 仅执行关闭，不处理任何回调方法
+Esc键可关闭最高层对话框，页面内ID被弹出时，该关闭方式无效 // 关闭时检测onClose回调方法
 
-*** 弹出层后将焦点锁定在第一个submit按钮上，以获得回车触发效果。【暂不开发，没想好是否真的需要】
+*** 弹出浮层后将焦点锁定在第一个submit按钮上，以获得回车触发效果。【暂不开发，没想好是否真的需要】

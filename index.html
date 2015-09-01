@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <title>Dialog3.0解说文档</title>
-<script src="src/dialog.3.1.js"></script>
+<script src="src/dialog.3.1.2.js"></script>
 <link rel="stylesheet" href="style/animate.css" />
 <link rel="stylesheet" href="style/motion.css" />
 <link rel="stylesheet" href="style/mydialog.css"/>
@@ -32,12 +32,48 @@ body { padding-top:60px; text-align:left; background:#f2f2f2;}
 .nav a { display:block; padding:0 24px; color:#ccc;}
 .nav a:hover { background:#323232; color:#fff}
 
-.banner { background:#042b67; padding:40px 20%; color:#fff;
-background: -moz-radial-gradient(bottom left, ellipse, #1960a2, #042a68, #144591);
-background: -webkit-radial-gradient(bottom left, ellipse, #1960a2, #042a68, #144591);
-background: radial-gradient(bottom left, ellipse, #1960a2, #042a68, #144591);}
-.banner h1 { font-size:38px; line-height:220%;}
-.banner h2 { font-size:18px; line-height:160%; padding-bottom:20px;}
+.banner {
+  position: relative;
+  padding: 40px 0;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,.4), 0 0 30px rgba(0,0,0,.075);
+  background: #B13938; /* Old browsers */
+  background: -moz-linear-gradient(45deg,  #B13938 0%, #C47F3E 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,#B13938), color-stop(100%,#C47F3E)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(45deg,  #B13938 0%,#C47F3E 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(45deg,  #B13938 0%,#C47F3E 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(45deg,  #B13938 0%,#C47F3E 100%); /* IE10+ */
+  background: linear-gradient(45deg,  #B13938 0%,#C47F3E 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#B13938', endColorstr='#C47F3E',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+  -webkit-box-shadow: inset 0 3px 7px rgba(0,0,0,.2), inset 0 -3px 7px rgba(0,0,0,.2);
+     -moz-box-shadow: inset 0 3px 7px rgba(0,0,0,.2), inset 0 -3px 7px rgba(0,0,0,.2);
+          box-shadow: inset 0 3px 7px rgba(0,0,0,.2), inset 0 -3px 7px rgba(0,0,0,.2);
+}
+.banner:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: url(http://www.bootcss.com/p/bootstrap-datetimepicker/img/bs-docs-masthead-pattern.png) repeat center center;
+  opacity: .8;
+}
+.banner h1 {
+  font-size: 60px;
+  font-weight: bold;
+  letter-spacing: -1px;
+  line-height: 1;
+  line-height:200%;
+}
+.banner h2 {
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.25;
+  margin-bottom: 30px;
+}
 
 .item { border:1px solid #ccc; background:#fff; border-radius:15px; -webkit-border-radius:15px; -moz-border-radius:15px; -o-border-radius:15px; width:70%; margin:40px auto 0; padding:20px; font-size:16px; line-height:180%;}
 .item h3 { background:#ededed; margin:-20px -20px 20px -20px; padding:10px 20px; border-radius:15px 15px 0 0; -webkit-border-radius:15px 15px 0 0; -moz-border-radius:15px 15px 0 0; -o-border-radius:15px 15px 0 0; font-weight:bold;}
@@ -95,7 +131,14 @@ input { line-height:16px; padding:3px 8px; margin:5px 0;}
 <a name="texing"></a>
 
 <div class="item">
-  组件版本：<strong>Dialog 3.1.0</strong><br />
+  组件版本：<strong>Dialog 3.1.2</strong><br />
+  3.1.2增加onBeforeClose关闭浮层之前的回调【任何形式的关闭都会执行】<br />
+  3.1.2增加onComplete关闭浮层后的回调【任何形式的关闭都会执行】<br />
+  3.1.2在Dialog.controller方法中存储所有已打开的Dialog对象<br />
+  3.1.2增加Dialog.close(true)强行关闭所有已打开的Dialog<br />
+  <br />
+  3.1.1修复动画执行完毕后清除class BUG【Firefox报错】问题<br />
+  <br />
   3.1.0更换动画组件，使动画更加流畅<br />
   增加关闭窗口动画【兼容IE10及以上、现代浏览器】<br />
   修正Dialog.close()参数为空时关闭所有Dialog
@@ -186,7 +229,7 @@ input { line-height:16px; padding:3px 8px; margin:5px 0;}
     <li>data-dialog-close【关闭按钮挂钩】</li>
     <li>data-dialog-submit【提交按钮挂钩】</li>
     <li>data-dialog-cancel【取消按钮挂钩】</li>
-    <li>在任何标签上加上这些属性都可以与其功能产生对应，例如：&lt;a href="#" class="D_close" <span class="green">data-dialog-close</span>&gt;关闭&lt;/a&gt;</li>
+    <li>初始化参数的msg中，在任何标签上加上这些属性都可以与其功能产生对应，例如：&lt;a href="#" class="D_close" <span class="green">data-dialog-close</span>&gt;关闭&lt;/a&gt;</li>
 
     <a name="api"></a>
 
@@ -227,20 +270,34 @@ input { line-height:16px; padding:3px 8px; margin:5px 0;}
      * @config {[Function]} onClose   关闭按钮回调 返回false时阻断执行【接受一个参数为当前实例】 例如：function(that) {}
      * @config {[Function]} onSubmit   确定按钮回调 返回false时阻断执行【接受一个参数为当前实例】 例如：function(that) {}
      * @config {[Function]} onCancel   取消按钮回调 返回false时阻断执行【接受一个参数为当前实例】 例如：function(that) {}
+     * @config {[Function]} onBeforeClose   Dialog关闭前回调【不分任何关闭方式】 返回false时阻断执行【接受一个参数为当前实例】 例如：function(that) {}
+     * @config {[Function]} onComplete   Dialog被关闭时都会回调【不分任何关闭方式】 在关闭浮层后才会执行【不接收参数】
      *
      * @remark 
      *        内部对外方法：
      *        var mydialog = new Dialog({});
-     *        mydialog.reload();// 重置定位功能，重置大小
-     *        mydialog.close();// 关闭浮层【关闭回调方法返回非false时才关闭】
-     *        mydialog.submit();// 提交关闭浮层【提交回调方法返回非false时才关闭】
-     *        mydialog.cancel();// 取消关闭浮层【取消回调方法返回非false时才关闭】
+     *        mydialog.reload(); // 重置定位功能，重置大小
+     *        mydialog.close(); // 关闭浮层【关闭回调方法返回非false时才关闭】
+     *        mydialog.remove(); // 直接跳过回到函数检测环节关闭浮层，非特殊情况不要使用
+     *        mydialog.submit(); // 提交关闭浮层【提交回调方法返回非false时才关闭】
+     *        mydialog.cancel(); // 取消关闭浮层【取消回调方法返回非false时才关闭】
      *
      *        全局关闭接口
-     *        Dialog.close('myclose');// 参数为浮层ID，仅执行关闭，不处理任何回调方法，没有参数时关闭所有
+     *        Dialog.close('myclose'); // 参数为浮层ID，关闭时检测onClose回调方
+     *        Dialog.close();// 关闭所有已打开的Dialog【会检测onClose回调函数是否返回true】
+     *        Dialog.close(true);// 强行关闭所有已打开的Dialog，跳过回调函数检测
      *
-     *        Esc键可关闭最高层对话框// 仅执行关闭，不处理任何回调方法
+     *        Esc键可关闭最高层对话框，页面内ID被弹出时，该关闭方式无效 // 关闭时检测onClose回调方法
      */
+    
+    关闭Dialog的方法：【myDialog指初始化Dialog时被赋值的变量】
+      myDialog.submit() === 节点属性data-dialog-submit // 检测onSubmit回调
+      myDialog.close() === 节点属性data-dialog-close // 检测onClose回调
+      myDialog.cancel() === 节点属性data-dialog-cancel // 检测onCancel回调
+      Dialog.close("xxx") // 外部指定单个浮层关闭 检测onClose回调
+      Dialog.close() // 关闭所有已打开浮层 检测onClose回调
+      Dialog.close(true) // 强行关闭有已打开浮层，跳过回调检测
+      ESC // 关闭最上层的已打开浮层，检测onClose回调， 页面内ID被弹出时，该关闭方式无效
   </pre>
 </div>
 
@@ -287,7 +344,20 @@ input { line-height:16px; padding:3px 8px; margin:5px 0;}
   <br />
   <input type="button" value="页面内ID-HTMLElement" onclick="new Dialog({'id': 'pageidformouse', 'position': this, 'top': 10, 'left': 10, 'animation': 'BounceIn'});" />
 
-
+  <br />
+  <input type="button" value="让Close按钮无法关闭" onclick="closePingbi()" />
+  <script>
+    function closePingbi() {
+      new Dialog({
+        'msg': 'test',
+        'onClose':function() {
+          console.log('Close屏蔽');
+          return false;
+        }
+      });
+    }
+    
+  </script>
 
 
   <br /><br /><br />
@@ -550,6 +620,13 @@ function test() {
     },
     "onClose": function(that) {
         console.log("close:" + that.config_title);
+    },
+    'onComplete': function() {
+      console.log('关闭后执行');
+    },
+    'onBeforeClose': function() {
+      console.log('关闭前回调');
+      // return false;
     },
 
     "closeButton": true

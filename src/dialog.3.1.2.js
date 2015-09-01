@@ -4,7 +4,8 @@
  * Copyright (c) 2015 F7
  *
  * Date: 2015-02
- * Revision: v3
+ * Edit: 2015-09
+ * Revision: v3.1.2
  */
 
 (function(G, D) {
@@ -133,6 +134,8 @@
      * @config {[Function]} onClose   关闭按钮回调 返回false时阻断执行【接受一个参数为当前实例】 例如：function(that) {}
      * @config {[Function]} onSubmit   确定按钮回调 返回false时阻断执行【接受一个参数为当前实例】 例如：function(that) {}
      * @config {[Function]} onCancel   取消按钮回调 返回false时阻断执行【接受一个参数为当前实例】 例如：function(that) {}
+     * @config {[Function]} onBeforeClose   Dialog关闭前回调【不分任何关闭方式】 返回false时阻断执行【接受一个参数为当前实例】 例如：function(that) {}
+     * @config {[Function]} onComplete   Dialog被关闭时都会回调【不分任何关闭方式】 在关闭浮层后才会执行【不接收参数】
      *
      * @remark 
      *        内部对外方法：
@@ -154,7 +157,7 @@
         };
 
         var o;
-        this.versions = "3.1.0";
+        this.versions = "3.1.2";
 
         // 修正配置参数
         if ( typeof o === "string" ) {// alert效果的配置
@@ -211,8 +214,12 @@
         this.config_onClose = typeof o.onClose == "function" ? o.onClose : function() { return true };
         this.config_onSubmit = typeof o.onSubmit == "function" ? o.onSubmit : function() { return true };
         this.config_onCancel = typeof o.onCancel == "function" ? o.onCancel : function() { return true };
+        this.config_onBeforeClose = typeof o.onBeforeClose == "function" ? o.onBeforeClose : function() { return true };
+        this.config_onComplete = o.onComplete;
 
         this.timer = "";// 倒计时关闭浮层计时器
+
+        this.name = this.config_id ? "dialog_" + this.config_id : "anonymous_" + (Dialog.anonymousIndex++);// Dialog的名称
 
         // 启动效果
         this.init();
@@ -306,6 +313,7 @@
         if ( flag == 0 ) {// 全新创建浮层
             // 插入相关属性
             parent.setAttribute("data-type", "dialog");
+            parent.setAttribute("data-dialog-name", this.name);
             
             head.className = "D_head";
             content.className = "D_content";
@@ -370,6 +378,7 @@
         if ( this.config_onReady ) {
             this.config_onReady(this);
         }
+        Dialog.controller[this.name] = this;
     };
 
     // 样式设置
@@ -501,126 +510,20 @@
             // 以下操作为动画完成后移除动画class，并且仅执行一次
             var events = ["animationend", "webkitAnimationEnd", "mozAnimationEnd", "MSAnimationEnd", "oanimationend"];
             for ( var i=0; i<events.length; i++ ) {
-                this.content.addEventListener(events[i], addFlash);
+                this.content.addEventListener(events[i], function() {
+                    addFlash(arguments.callee);
+                });
             }
 
-            function addFlash() {
+            function addFlash(fn) {
                 that.content.className = that.content.className.replace(that.config_animation, "");
-
                 for ( var i=0; i<events.length; i++ ) {
-                    that.content.removeEventListener(events[i], addFlash);
+                    that.content.removeEventListener(events[i], fn);
                 }
             };
 
         }
     };
-    
-    /*
-    Dialog.prototype.animationPrepare = function() {
-        var model = this.config_animation,
-            time = "300ms",
-            that = this;
-        if ( !model ) { return false };
-        
-        if ( model == "down" ) {
-            var top = getStyle(this.content, "top");
-            setStyle( this.content, {
-                top: "0%",
-                opacity: "0"
-            });
-            
-            setTimeout(function() {
-                setStyle( that.content, {
-                    WebkitTransitionDuration: time,
-                    MozTransitionDuration: time,
-                    transitionDuration: time,
-                    transitionTimingFunction: "ease-out",
-                    top: top,
-                    opacity: "1"
-                } );
-                
-                removeDuration();
-            }, 10);
-        }
-
-        if ( model == "size" ) {
-            var width = this.content.scrollWidth,
-                height = this.content.scrollHeight,
-                _left = getStyle(this.content, "marginLeft"),
-                _top = getStyle(this.content, "marginTop");
-            setStyle( this.content, {
-                overflow: "hidden",
-                width: "0",
-                height: "0",
-                marginLeft: "0",
-                marginTop: "0",
-                opacity: "0"
-            });
-            
-            setTimeout(function() {
-                setStyle( that.content, {
-                    WebkitTransitionDuration: time,
-                    MozTransitionDuration: time,
-                    transitionDuration: time,
-                    transitionTimingFunction: "ease-out",
-                    width: width + "px",
-                    height: height + "px",
-                    marginLeft: _left,
-                    marginTop: _top,
-                    opacity: "1"
-                } );
-                
-                removeDuration();
-            }, 10);
-        }
-
-        if ( model == "rotate" ) {
-            var width = this.content.scrollWidth,
-                height = this.content.scrollHeight,
-                _left = getStyle(this.content, "marginLeft"),
-                _top = getStyle(this.content, "marginTop");
-            setStyle( this.content, {
-                overflow: "hidden",
-                width: "0",
-                height: "0",
-                marginLeft: "0",
-                marginTop: "0",
-                WebkitTransform: "rotate(360deg)",
-                MozTransform: "rotate(360deg)",
-                transform: "rotate(360deg)",
-                opacity: "0"
-            });
-            
-            setTimeout(function() {
-                setStyle( that.content, {
-                    WebkitTransitionDuration: time,
-                    MozTransitionDuration: time,
-                    transitionDuration: time,
-                    transitionTimingFunction: "ease-out",
-                    width: width + "px",
-                    height: height + "px",
-                    marginLeft: _left,
-                    marginTop: _top,
-                    WebkitTransform: "rotate(0deg)",
-                    MozTransform: "rotate(0deg)",
-                    transform: "rotate(0deg)",
-                    opacity: "1"
-                } );
-                
-                removeDuration();
-            }, 10);
-        }
-
-        function removeDuration() {
-            setTimeout(function() {
-               setStyle( that.content, {
-                    WebkitTransitionDuration: 0,
-                    MozTransitionDuration: 0,
-                    transitionDuration: 0
-                } ); 
-            }, 300);
-        }
-    };*/
 
     Dialog.prototype.event = function() {
         var elems = this.content.getElementsByTagName("*"),
@@ -743,68 +646,87 @@
         var elem = F$(id) || this.content;
         clearTimeout(this.timer);// 清除倒计时关闭对话框的计时器
         if ( !elem || elem.scrollHeight == 0 ) { return false };// elem.scrollHeight == 0 代表该节点被创建，但并未插入到页面
+
+        if ( this.config_onBeforeClose(this) === false ) {
+            return false;
+        }
         
         if ( elem.parentNode.getAttribute("data-type") == "dialog" ) {// 组件创建的浮层
             removeDOM(elem.parentNode);
         } else {// 页面内存在的ID
             elem.style.display = "none";
         }
+
+        // 销毁Dialog.controller中记录的索引
+        delete Dialog.controller[this.name];
+
+        if ( this.config_onComplete ) {
+            this.config_onComplete();
+        }
+
+        function removeDOM(elem) {
+            var animationElem = getElementsByClassName("D_content", "div", elem)[0],
+                outAnimation = animationElem.getAttribute("data-outanimation"),
+                events = ["animationend", "webkitAnimationEnd", "mozAnimationEnd", "MSAnimationEnd", "oanimationend"];
+            
+            if ( !outAnimation ) {
+                elem.parentNode.removeChild(elem);
+            } else {
+                animationElem.className += " " + outAnimation;
+                for ( var i=0; i<events.length; i++ ) {
+                    animationElem.addEventListener(events[i], function() {
+                        elem.parentNode.removeChild(elem);
+                    });
+                }
+            }
+        };
     };
     
     Dialog.prototype.reload = function() {
         this.position();// 当前仅实现了重新定位及计算大小
     };
 
+    Dialog.controller = {};// 所有Dialog的管理中心
+    Dialog.anonymousIndex = 0;// 匿名Dialog索引
+
     // 全局关闭接口，仅执行关闭
     Dialog.close = function(id) {
-        if ( !id ) {// 不传递参数关闭所有
-            var childs = document.getElementsByTagName("body")[0].childNodes,
-                dialog = [];
-            
-            for ( var i=0,l=childs.length; i<l; i++ ) {
-                if ( childs[i].nodeName == "DIV" && childs[i].getAttribute("data-type") == "dialog" ) {
-                    dialog.push(childs[i]);
-                }
+        var dialog_items = Dialog.controller;
+        if ( typeof id === "boolean" && id === true ) {// 强行关闭所有对话框
+            for ( key in dialog_items ) {
+                dialog_items[key].remove();
+            }
+            return false;
+        } else if ( !id ) {// 关闭所有已打开的Dialog【会检测onClose回调函数，如果有且返回true的才会关闭】
+            for ( key in dialog_items ) {
+                dialog_items[key].close();
+            }
+            return false;
+        } else {// 传递为ID或者节点时关闭单个Dialog
+            // 关闭指定ID
+            var elem = F$(id),
+                name,
+                dialogID;
+            if ( !elem ) { return false };
+            // 获取Dialog的名称
+            name = elem.getAttribute("data-dialog-name");
+            // 没有名称时拼接ID名称
+            if ( !name && elem.id ) {
+                name = "dialog_" + elem.id;
+            }
+            // 依然没有名称时不执行
+            if ( !name ) {
+                return false;
             }
 
-            for ( var j=0,le=dialog.length; j<le; j++ ) {
-                removeDOM(dialog[j]);
+            // 没有这个控制器不处理
+            if ( typeof Dialog.controller[name] == "undefined" ){
+                return false;
             }
-
-        }
-
-        // 关闭指定ID
-        var elem = F$(id);
-        if ( !elem ) { return false };
-        if ( elem.parentNode.getAttribute("data-type") == "dialog" ) {// 组件创建浮层
-            removeDOM(elem.parentNode);
-        } else {// 页面内存在的ID
-            elem.style.display = "none";
+            Dialog.controller[name].close();
         }
     };
 
-    /**
-     * 移除DOM元素
-     * 因为ESC会调用，所以没写在原型扩展中
-     * @return
-     */
-    function removeDOM(elem) {
-        var animationElem = getElementsByClassName("D_content", "div", elem)[0],
-            outAnimation = animationElem.getAttribute("data-outanimation"),
-            events = ["animationend", "webkitAnimationEnd", "mozAnimationEnd", "MSAnimationEnd", "oanimationend"];
-        
-        if ( !outAnimation ) {
-            elem.parentNode.removeChild(elem);
-        } else {
-            animationElem.className += " " + outAnimation;
-            for ( var i=0; i<events.length; i++ ) {
-                animationElem.addEventListener(events[i], function() {
-                    elem.parentNode.removeChild(elem);
-                });
-            }
-        }
-        
-    };
 
     /**
      * ESC关闭浮层【全局模式下通过节点的data-type=dialog属性，从后至前进行关闭】
@@ -824,7 +746,7 @@
             }
             if ( e.keyCode == 0x1B && dialog.length > 0 ) {// ESC
                 elem = dialog[dialog.length-1];
-                removeDOM(elem);
+                Dialog.close(elem);
                 return false;
             };
         };
