@@ -735,6 +735,7 @@
     function escCloseDialog() {
         // 注册捕获键盘按下事件
         document.onkeydown = function(e) {
+            var e = e || window.event;
             var childs = document.getElementsByTagName("body")[0].childNodes,
                 dialog = [],
                 elem;
