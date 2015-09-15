@@ -502,6 +502,11 @@
 
     // 动画效果
     Dialog.prototype.animation = function() {
+        // IE9 及以下浏览器不处理动画【他们不支持CSS3动画】
+        if ( isIE && isIE < 10 ) {
+            return false;
+        }
+
         var that = this;
         if ( this.config_animation ) {
             this.content.className += " " + this.config_animation;

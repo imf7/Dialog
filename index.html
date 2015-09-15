@@ -136,6 +136,12 @@ input { line-height:16px; padding:3px 8px; margin:5px 0;}
   3.1.2增加onComplete关闭浮层后的回调【任何形式的关闭都会执行】<br />
   3.1.2在Dialog.controller方法中存储所有已打开的Dialog对象<br />
   3.1.2增加Dialog.close(true)强行关闭所有已打开的Dialog<br />
+
+  <br />
+  修复：<br />
+  IE低版本不支持ESC关闭<br />
+  IE低版本使用动画时无法关闭浮层<br />
+
   <br />
   3.1.1修复动画执行完毕后清除class BUG【Firefox报错】问题<br />
   <br />
@@ -342,7 +348,7 @@ input { line-height:16px; padding:3px 8px; margin:5px 0;}
   <input type="button" value="Dialog-HTMLElement" onclick="new Dialog({'id': 'formouse', 'position': this, 'msg':'根据元素定位', 'top': 10, 'left': '20px'});" />
 
   <br />
-  <input type="button" value="页面内ID-HTMLElement" onclick="new Dialog({'id': 'pageidformouse', 'position': this, 'top': 10, 'left': 10, 'animation': 'BounceIn'});" />
+  <input type="button" value="页面内ID-HTMLElement" onclick="new Dialog({'id': 'pageidformouse', 'position': this, 'top': 10, 'left': 10, 'animation': 'animated bounceIn'});" />
 
   <br />
   <input type="button" value="让Close按钮无法关闭" onclick="closePingbi()" />
@@ -351,7 +357,7 @@ input { line-height:16px; padding:3px 8px; margin:5px 0;}
       new Dialog({
         'msg': 'test',
         'onClose':function() {
-          console.log('Close屏蔽');
+          alert('Close被屏蔽，普通关闭均无法执行');
           return false;
         }
       });
@@ -361,7 +367,7 @@ input { line-height:16px; padding:3px 8px; margin:5px 0;}
 
 
   <br /><br /><br />
-  动画案例：
+  动画案例：【仅支持IE10+及现代浏览器，低版本IE使用后无动画，但不影响任何功能】
   <br />
   <input type="button" value="Dialog-弹跳" onclick="new Dialog({'msg':'这是动画案例', 'lock': true, 'animation': 'animated bounce'});" />
   <br />
@@ -552,9 +558,9 @@ input { line-height:16px; padding:3px 8px; margin:5px 0;}
 <br /><br /><br />
 
 
-<div id="pageidformouse">页面内ID进行定位使用<br /><br /><a href="#" data-dialog-close>关闭</a></div>
+<div id="pageidformouse">页面内ID进行定位使用22<br /><br /><a href="#" data-dialog-close>关闭</a></div>
 
-
+<br /><br /><br />
 <script>
 function test() {
   window.d = new Dialog({
@@ -609,23 +615,23 @@ function test() {
     "cancelButton": "拜拜",
     
     "onReady": function(that) {
-        console.log(that.config_title);
+        // console.log(that.config_title);
     },
     "onSubmit": function(that) {
-        console.log(that.config_title);
+        alert("屏蔽了确定按钮");
         return false;
     },
     "onCancel": function(that) {
-        console.log(that.config_title);
+        // console.log(that.config_title);
     },
     "onClose": function(that) {
-        console.log("close:" + that.config_title);
+        // console.log("close:" + that.config_title);
     },
     'onComplete': function() {
-      console.log('关闭后执行');
+      alert('全局关闭后执行');
     },
     'onBeforeClose': function() {
-      console.log('关闭前回调');
+      // console.log('关闭前回调');
       // return false;
     },
 
